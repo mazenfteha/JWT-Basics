@@ -5,7 +5,6 @@
 //setup authentication so only the request with JWT can access the dashboard
 
 const jwt =require('jsonwebtoken')
-const CustomAPIError =require('../errors/custom-error')
 
 const login =async (req,res)=>{
     //check username, password in post(login) request
@@ -23,24 +22,15 @@ const login =async (req,res)=>{
     res.status(200).json({msg:'user created',token})
 }
 
-const dashboard = async(req,res)=>{
-    //setup authentication so only the request with JWT can access the dashboard
-    const authHeader =req.headers.authorization;
+const dashboard = async (req,res)=>{
 
-    if(!authHeader || !authHeader.startsWith('Bearer ')){
-        throw new CustomAPIError('No token provided',401)
-    }
+    const luckNumber =Math.floor(Math.random()*100)
 
-    const token =authHeader.split(' ')[1]
-    //verify whether the token is actually valid
-    try {
-        const decoded =jwt.verify(token,process.env.JWT_SECRET)
-        const luckNumber =Math.floor(Math.random()*100)
-        res.status(200).json({msg:`Hello, ${decoded.username}`,secret:`Here is your authorized data, you r lucky number
-        is ${luckNumber}`})
-    } catch (error) {
-        throw new CustomAPIError('Not authorized to access this data',401)
-    }
+    res.status(200).json({msg:`Hello, ${ req.user.username}`,
+    secret: `Here is your authorized DataTransfer, your luckt number is ${luckNumber}`})
+
+
+
 }
 
 module.exports ={
