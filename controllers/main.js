@@ -5,13 +5,14 @@
 //setup authentication so only the request with JWT can access the dashboard
 
 const jwt =require('jsonwebtoken')
+const { BadRequestError } =require('../errors')
 
 const login =async (req,res)=>{
     //check username, password in post(login) request
     //check in the controller
     const {username,password} =req.body
     if(!username || !password){
-        throw new CustomAPIError('please provide email and password',400)
+        throw new BadRequestError('please provide email and password')
     }
 
     //create demo id to send into payload
